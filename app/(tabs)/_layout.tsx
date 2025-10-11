@@ -5,31 +5,54 @@ import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Provider } from '@react-native-material/core';
+import { AuthProvider } from '../context/AuthContext';
+import LoadingContextProvider from '../context/LoadingContext';
+import SuccessAnimationContextProvider from '../context/SuccessAnimationContext';
+import { UserProvider } from '../context/UserContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+
+    <AuthProvider>
+      <UserProvider>
+        <LoadingContextProvider>
+           <SuccessAnimationContextProvider>
+            <Provider>
+              <Tabs
+                screenOptions={{
+                  tabBarActiveTintColor: Colors['light'].tint,
+                  headerShown: false,
+                  tabBarButton: HapticTab,
+                }}>
+                <Tabs.Screen
+                  name="Home"
+                  options={{
+                    title: 'Home',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+                  }}
+                />
+                <Tabs.Screen
+                  name="invite"
+                  options={{
+                    title: 'Invite',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+                  }}
+                />
+                <Tabs.Screen
+                  name="Profile"
+                  options={{
+                    title: 'Profile',
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+                  }}
+                />
+              </Tabs>
+            </Provider>
+         </SuccessAnimationContextProvider>
+        </LoadingContextProvider>
+      </UserProvider>
+    </AuthProvider>
   );
 }

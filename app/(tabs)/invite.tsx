@@ -1,0 +1,89 @@
+import CustomButton from '@/app/components/CustomButton';
+import CustomInput from '@/app/components/CustomInput';
+
+import { useAuth } from '@/app/context/AuthContext';
+import { useLoading } from '@/app/context/LoadingContext';
+import { Home, useUser } from '@/app/context/UserContext';
+import { sendEmail } from '@/app/utils/EmailSender';
+import { inviteEmailTemplate } from '@/app/utils/htmlTemplates';
+import { BottomSheet, ListItem } from '@rneui/base';
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSuccessAnimation } from '../context/SuccessAnimationContext';
+import { createInvite } from '../services/SupaBaseService';
+import { generateRandomCode } from '../utils/RandomCodeGenerator';
+export default function InviteScreen() {
+  const { user, userName } = useAuth();
+  const { setLoading } = useLoading();
+  const { setSuccessAnimation } = useSuccessAnimation();
+  const { homes } = useUser();
+  const [ selectedHome, setSelectedHome ] = useState<Home>(homes[0]);
+  const [email, setEmail] = useState('');
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  
+  const handleInvite = async () => {
+    if(!selectedHome || !user) return;
+    setLoading(true);
+    const inviteCode = generateRandomCode().toString();
+    createInvite(selectedHome.id, inviteCode, email, user.id).then( result => {
+      if(result.error || !result.data) {
+        return
+      } else {
+        const inviteHtml = inviteEmailTemplate(userName, selectedHome.name, inviteCode, 'http://localhost:3000/invite?token=' + result.data[0].id);
+        sendEmail(email, userName + " te ha invitado a Mi Gasto: app de gestión de gastos", inviteHtml).then( error => {
+            setLoading(false);
+            if(!error) {
+              setSuccessAnimation(true);
+            }
+          });
+      }
+    })
+
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Invitar al hogar</Text>
+      <CustomButton title={selectedHome ? selectedHome.name : "Seleccionar hogar"}
+                    handlePress={() => setBottomSheetVisible(true)} extraStyles={{ width: '100%' }} />
+      <CustomInput placeholder="Email" onChangeText={setEmail} extraStyles={{ width: '100%' }} />
+      <CustomButton title="Invitar" handlePress={handleInvite} extraStyles={{ width: '100%' }} />
+      <BottomSheet isVisible={bottomSheetVisible} onBackdropPress={() => setBottomSheetVisible(false)} containerStyle={{flex: 1}} >
+         {homes.map((home, i) => (
+                        <ListItem
+                        key={i}
+                        onPress={() => {
+                            setSelectedHome(home)
+                            setBottomSheetVisible(false)
+                        }} 
+                        >
+                        <ListItem.Content>
+                            <ListItem.Title
+                            >
+                                {home.name}
+                            </ListItem.Title>
+                        </ListItem.Content>
+                        </ListItem>
+                    ))}
+      </BottomSheet> 
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  title: {
+    fontSize: 36,
+    marginBottom: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  }
+});
