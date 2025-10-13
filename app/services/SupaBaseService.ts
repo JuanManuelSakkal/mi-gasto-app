@@ -1,5 +1,6 @@
 
 import { Expense } from "../components/NewExpenseModal";
+import { Income } from "../components/NewIncomeModal";
 import { supabase } from "../supabase/supabase-client";
 
 export const createUser = async (email: string, password: string, name: string) => {
@@ -111,6 +112,54 @@ export const getCategories = async () => {
 
 export const getPaymentMethods = async () => {
   const { data, error } = await supabase.from('payment_method').select("id, name");
+  if(error) return [];
+  return data;
+};
+
+export const updateUserName = async (id: string, name: string) => {
+  const { error } = await supabase.from('profiles').update({ name }).eq('id', id);
+  return error;
+};
+
+export const updateUserEmail = async (id: string, email: string) => {
+  const { data, error: authError } = await supabase.auth.updateUser({
+      email: email
+    });
+  if(authError) return authError
+
+  const { error } = await supabase.from('profiles').update({ email }).eq('id', id);
+  return error;
+}
+
+export const checkUserPassword = async (email: string, password: string) => {
+  const { error } = await supabase.auth.signInWithPassword({email, password });
+  return error;
+}
+
+export const updateUserPassword = async (password: string) => {
+  console.log("calling updateUserPassword: " + password);
+  const { error } = await supabase.auth.updateUser({
+      password: password
+    });
+  return error;
+}
+
+export const getIncomesByHome = async (homeId: string) => {
+  const { data, error } = await supabase.from('incomes').select("id, name, profiles(name), description, amount, payment_method(name), created_at").eq('home_id', homeId).order('created_at', { ascending: false });
+  console.log("incomes error", error);
+  if(error) return [];
+  return data;
+};
+
+export const createIncome = async (userId: string, homeId: string, income: Income) => {
+    const { error } = await supabase.from('incomes').insert({ user_id: userId, home_id: homeId, name: 
+        income.name, description: income.description, amount: income.amount });
+    console.log(error);
+    return error
+}
+
+export const getEarningMethods = async () => {
+  const { data, error } = await supabase.from('earning_method').select("id, name");
   if(error) return [];
   return data;
 };

@@ -12,14 +12,21 @@ interface UserContextType {
     userName: string,
     setUserName: (name: string) => void,
     homes: Home[],
-    setHomes: (homes: Home[]) => void
+    setHomes: (homes: Home[]) => void,
+    selectedHome: Home,
+    setSelectedHome: (home: Home) => void
 }
 
 const UserContext = React.createContext<UserContextType>({
     userName: "",
     setUserName: (name: string) => {},
     homes: [],
-    setHomes: (homes: Home[]) => {}
+    setHomes: (homes: Home[]) => {},
+    selectedHome: {
+        id: "",
+        name: ""
+    },
+    setSelectedHome: (home: Home) => {}
 });
 
 
@@ -28,6 +35,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const { setLoading } = useLoading() ;
     const [userName, setUserName] = React.useState('');
     const [homes, setHomes] = React.useState<Home[]>([]);
+    const [selectedHome, setSelectedHome] = React.useState<Home>(homes[0]);
 
     useEffect(()=>{
         if(user){
@@ -37,7 +45,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             )
             const homesP = getUserHomes(user.id).then(dbHomes =>{
                 console.log(dbHomes)
-                setHomes(dbHomes.map(home => ({id: home.home_id, name: home.homes.name})))}
+                setHomes(dbHomes.map(home => ({id: home.home_id, name: home.homes.name})))
+                setSelectedHome({    
+                    id: dbHomes[0].home_id,
+                    name: dbHomes[0].homes.name
+                })
+            
+            }
             )
 
             Promise.all([nameP, homesP]).then(() => {setLoading(false)});
@@ -46,7 +60,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, [user])
 
     return (
-        <UserContext.Provider value={{ userName, setUserName, homes, setHomes }} >
+        <UserContext.Provider value={{ userName, setUserName, homes, setHomes, selectedHome, setSelectedHome }} >
             {children}
         </UserContext.Provider>
     )

@@ -1,5 +1,5 @@
 import { Pressable } from "@react-native-material/core";
-import { Avatar, Card } from "@rneui/themed";
+import { Avatar } from "@rneui/themed";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 interface ThreeCellTableProps {
@@ -9,9 +9,7 @@ interface ThreeCellTableProps {
 
 export default function ThreeCellTable({title, data}: ThreeCellTableProps) {
     return (
-        <Card containerStyle={{borderRadius: 20}}>
-            <Card.Title>{title}</Card.Title>
-            <Card.Divider />
+
             <FlatList 
                 style={{borderRadius: 10}}
                 data={data} 
@@ -31,7 +29,6 @@ export default function ThreeCellTable({title, data}: ThreeCellTableProps) {
                     
                 )} 
             />
-        </Card>
     );
 }
 

@@ -1,48 +1,33 @@
 import { Icon } from "@rneui/themed";
 import { useState } from "react";
-import { FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Home, useUser } from "../context/UserContext";
+import SelectHomeDialog from "./SelectHomeDialog";
 
 
 export default function Menu() {
+    const {setSelectedHome} = useUser();
 
     const [menuOpen, setMenuOpen] = useState(false);
-
     function toggleMenu() {
         setMenuOpen(!menuOpen);
     }
 
-    function handleSelect(item: string) {
-        console.log(`Selected: ${item}`);
+    function handleSelect(home: Home) {
+        console.log(`Selected: ${home.name}`);
+        setSelectedHome(home);
         toggleMenu();
     }
 
-    return (
+    return (<>
         <View style={styles.menuContainer}>
             <Pressable onPress={toggleMenu}>
                 <Icon name="menu" color="white" size={30} />
             </Pressable>
-             <Modal visible={menuOpen} transparent animationType="slide">
-                <View style={styles.modalBackground}>
-                <View style={styles.modalContent}>
-                    <FlatList
-                    data={["Option 1", "Option 2", "Option 3"]}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                        style={styles.option}
-                        onPress={() => handleSelect(item)}
-                        >
-                        <Text style={styles.optionText}>{item}</Text>
-                        </TouchableOpacity>
-                    )}
-                    />
-                    <TouchableOpacity style={styles.closeButton} onPress={toggleMenu}>
-                    <Text style={styles.closeText}>Close</Text>
-                    </TouchableOpacity>
-                </View>
-                </View>
-            </Modal>
+            <SelectHomeDialog title="Ver Hogar" menuOpen={menuOpen} toggleMenu={toggleMenu} handleSelect={handleSelect} />
+            
         </View>
+            </>
     )
 }
 
@@ -50,18 +35,6 @@ const styles = StyleSheet.create({
     menuContainer: {
         position: 'absolute',
         right: 20,
-    },
-    modalBackground: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalContent: {
-        width: "80%",
-        backgroundColor: "white",
-        borderRadius: 10,
-        padding: 20,
     },
     option: {
         padding: 15,

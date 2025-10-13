@@ -11,7 +11,7 @@ import { createUserHome } from '../services/SupaBaseService';
 
 export default function HomeScreen() {
   const { user } = useAuth();
-  const { homes, setHomes } = useUser();
+  const { selectedHome, setSelectedHome, homes, setHomes } = useUser();
   const [homeName, setHomeName] = useState('');
   const [homeId, setHomeId] = useState('');
   const [newHomeModalVisible, setNewHomeModalVisible] = useState(false);
@@ -19,11 +19,11 @@ export default function HomeScreen() {
   const [homeExpenses, setHomeExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
-    if(!homes || homes.length === 0) return;
-    setHomeName(homes[0].name);
-    setHomeId(homes[0].id);
+    if(!selectedHome) return;
+    setHomeName(selectedHome.name);
+    setHomeId(selectedHome.id);
 
-  }, [homes]);
+  }, [selectedHome]);
 
   const handleCreateHome = (name: string) => {
     console.log("calling handleCreateHome");
@@ -37,6 +37,7 @@ export default function HomeScreen() {
             setHomeName(name);
             setHomeId(result.homeId);
             setHomes([...homes, {id: result.homeId, name}]);
+            setSelectedHome({id: result.homeId, name});
           };
           setLoading(false);
       });
@@ -50,11 +51,11 @@ export default function HomeScreen() {
       {  
         homeId &&
         <>
-        <HomeView homeName={homeName} homeId={homeId}></HomeView>
+        <HomeView home={{id: homeId, name: homeName}}></HomeView>
         </>
       }
       {    
-        !homeId &&
+        !homeId && !loading &&
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text style={styles.h3}>Parece que aún no formás parte de ningún hogar</Text>
           <CustomButton title="Crear hogar" handlePress={() => {setNewHomeModalVisible(true)}} />

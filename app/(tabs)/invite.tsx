@@ -6,9 +6,9 @@ import { useLoading } from '@/app/context/LoadingContext';
 import { Home, useUser } from '@/app/context/UserContext';
 import { sendEmail } from '@/app/utils/EmailSender';
 import { inviteEmailTemplate } from '@/app/utils/htmlTemplates';
-import { BottomSheet, ListItem } from '@rneui/base';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import SelectHomeDialog from '../components/SelectHomeDialog';
 import { useSuccessAnimation } from '../context/SuccessAnimationContext';
 import { createInvite } from '../services/SupaBaseService';
 import { generateRandomCode } from '../utils/RandomCodeGenerator';
@@ -16,10 +16,14 @@ export default function InviteScreen() {
   const { user, userName } = useAuth();
   const { setLoading } = useLoading();
   const { setSuccessAnimation } = useSuccessAnimation();
-  const { homes } = useUser();
-  const [ selectedHome, setSelectedHome ] = useState<Home>(homes[0]);
+  const { homes, selectedHome: globalSelectedHome } = useUser();
+  const [ selectedHome, setSelectedHome ] = useState<Home>(globalSelectedHome);
   const [email, setEmail] = useState('');
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedHome(globalSelectedHome);
+  }, [globalSelectedHome]);
   
   const handleInvite = async () => {
     if(!selectedHome || !user) return;
@@ -41,31 +45,23 @@ export default function InviteScreen() {
 
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleSelect = (home: Home) => {
+    setSelectedHome(home);
+    setMenuOpen(false);
+  };  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Invitar al hogar</Text>
       <CustomButton title={selectedHome ? selectedHome.name : "Seleccionar hogar"}
-                    handlePress={() => setBottomSheetVisible(true)} extraStyles={{ width: '100%' }} />
+                    handlePress={toggleMenu} extraStyles={{ width: '100%' }} />
       <CustomInput placeholder="Email" onChangeText={setEmail} extraStyles={{ width: '100%' }} />
       <CustomButton title="Invitar" handlePress={handleInvite} extraStyles={{ width: '100%' }} />
-      <BottomSheet isVisible={bottomSheetVisible} onBackdropPress={() => setBottomSheetVisible(false)} containerStyle={{flex: 1}} >
-         {homes.map((home, i) => (
-                        <ListItem
-                        key={i}
-                        onPress={() => {
-                            setSelectedHome(home)
-                            setBottomSheetVisible(false)
-                        }} 
-                        >
-                        <ListItem.Content>
-                            <ListItem.Title
-                            >
-                                {home.name}
-                            </ListItem.Title>
-                        </ListItem.Content>
-                        </ListItem>
-                    ))}
-      </BottomSheet> 
+      <SelectHomeDialog title="Seleccionar Hogar" menuOpen={menuOpen} toggleMenu={toggleMenu} handleSelect={handleSelect} />
     </View>
   );
 }

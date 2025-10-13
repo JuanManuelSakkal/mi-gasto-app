@@ -16,7 +16,7 @@ interface Category {
     name: string
 }
 
-interface Method {
+export interface Method {
     id: string
     name: string
 }
@@ -55,7 +55,7 @@ export default function NewExpenseModal({ visible, setVisible, handleCreate }: N
     }, [paymentMethods]);
 
     return (
-            <Dialog isVisible={visible} onBackdropPress={() => setVisible(false)} >
+            <Dialog isVisible={visible} animationType="fade" onBackdropPress={() => setVisible(false)} >
                 <Dialog.Title title="Nuevo gasto" />
                 <BottomSheet 
                     isVisible={bottomSheetVisible}
