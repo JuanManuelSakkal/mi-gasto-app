@@ -1,7 +1,8 @@
 import { Divider, Tab, TabView } from "@rneui/themed";
+import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Expense, Income, UserColors } from "./HomeView";
+import { Expense, Income, UserColors } from "../context/HomeContext";
 import ThreeCellTable from "./ThreeCellTable";
 
 interface ExpensesIncomeTabsProps {
@@ -11,7 +12,13 @@ interface ExpensesIncomeTabsProps {
 }
 
 export default function ExpensesIncomeTabs({expenses, incomes, userColors}: ExpensesIncomeTabsProps) {
+    const navigation = useNavigation();
     const [index, setIndex] = useState(0);
+
+    function handleExpensePress(expense: Expense | Income) {
+        navigation.navigate("details/ExpenseDetails", { expense });
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.card}>
@@ -31,14 +38,30 @@ export default function ExpensesIncomeTabs({expenses, incomes, userColors}: Expe
                 </Tab>
                 <TabView value={index} onChange={setIndex}>
                     <TabView.Item style={[styles.itemStyle]}>
-                        <ThreeCellTable title="Gastos recientes" data={expenses.map(expense => [expense.payer, userColors[expense.payer], 
-                                                                                                        expense.name, expense.category,
-                                                                                                        "-$" + expense.amount.toLocaleString("es-AR")])} />
+                        <ThreeCellTable onRowPress={handleExpensePress} data={expenses.map(expense => {
+                                                                        return {
+                                                                            object: expense,
+                                                                            userName: expense.payer, 
+                                                                            color: userColors[expense.payer],
+                                                                            name: expense.name, 
+                                                                            category: expense.category,
+                                                                            amount: "-$" + expense.amount.toLocaleString("es-AR")
+                                                                        }
+                                                                    }
+                                                            )}/>
                     </TabView.Item>
                     <TabView.Item style={[styles.itemStyle]}>
-                        <ThreeCellTable title="Gastos recientes" data={incomes.map(income => [income.depositor, userColors[income.depositor], 
-                                                                                                        income.name, income.method,
-                                                                                                        "+$" + income.amount.toLocaleString("es-AR")])} />
+                        <ThreeCellTable data={incomes.map(income => {
+                                                                        return {
+                                                                            id: income.id,
+                                                                            userName: income.depositor, 
+                                                                            color: userColors[income.depositor], 
+                                                                            name: income.name, 
+                                                                            category: income.method,
+                                                                            amount: "+$" + income.amount.toLocaleString("es-AR")
+                                                                        }
+                                                                    }
+                                                        )} />
                     </TabView.Item>
                 </TabView>
             </View>
@@ -68,6 +91,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 5,
         overflow: "hidden",
+        elevation: 1
+        
     },
     container: {
         flex: 1,
@@ -76,7 +101,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: "100%",
         paddingHorizontal: 20,
-        overflow: "hidden",
         marginVertical: 20
     },
     cardTitleContainer: {

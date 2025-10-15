@@ -25,10 +25,6 @@ function RootNavigation() {
   
     );
   }
-
-  // 2️⃣ Si hay sesión, significa que el usuario está logueado
-  // Mostramos las pantallas principales (tabs, gastos, etc.)
-
     return <AuthStack />;
   }
 

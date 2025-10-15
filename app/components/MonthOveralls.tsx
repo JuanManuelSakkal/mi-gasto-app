@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
-import { Expense, Income, MemberExpenses, MemberIncomes } from "./HomeView";
+import { Expense, Income, MemberExpenses, MemberIncomes } from "../context/HomeContext";
 import SimpleCard from "./SimpleCard";
 
 

@@ -1,29 +1,41 @@
 import { Pressable } from "@react-native-material/core";
 import { Avatar } from "@rneui/themed";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Expense, Income } from "../context/HomeContext";
 
-interface ThreeCellTableProps {
-    title: string;
-    data: [string, string, string, string, string][];
+export interface RowData {
+    object: Expense | Income;
+    userName: string;
+    name: string;
+    color: string;
+    category: string;
+    amount: string;
 }
 
-export default function ThreeCellTable({title, data}: ThreeCellTableProps) {
+interface ThreeCellTableProps {
+    data: RowData[];
+    onRowPress?: (object: Expense | Income) => void
+}
+
+export default function ThreeCellTable({data, onRowPress}: ThreeCellTableProps) {
     return (
 
             <FlatList 
                 style={{borderRadius: 10}}
                 data={data} 
                 renderItem={({item, index}) => (
-                    <Pressable pressEffect="highlight" style={styles.tableRow}>
+                    <Pressable pressEffect="highlight" style={styles.tableRow}
+                        onPress={() => onRowPress && onRowPress(item.object)}
+                    >
                         <View style={[styles.tableCell, {flex: 1}]}>
-                            <Avatar rounded title={item[0][0]}  containerStyle={{borderRadius: 50, backgroundColor: item[1]}} />
+                            <Avatar rounded title={item.userName[0]}  containerStyle={{borderRadius: 50, backgroundColor: item.color}} />
                         </View>
                         <View style={[styles.tableCell, {flex: 3}]}>
-                            <Text style={styles.tableText}>{item[2]}</Text>
-                            <Text >{item[3]}</Text>
+                            <Text style={styles.tableText}>{item.name}</Text>
+                            <Text >{item.category}</Text>
                         </View>
                         <View style={styles.tableCell}>
-                            <Text style={styles.tableText}>{item[4]}</Text>
+                            <Text style={styles.tableText}>{item.amount}</Text>
                         </View>
                     </Pressable>
                     
