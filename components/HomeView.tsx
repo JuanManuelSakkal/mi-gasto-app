@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
@@ -12,8 +13,8 @@ import ExpensesIncomeTabs from './ExpensesIncomeTabs';
 import Header from './Header';
 import MainSpeedDial from './MainSpeedDial';
 import MonthOveralls from './MonthOveralls';
-import NewExpenseModal, { Expense as NewExpense } from './NewExpenseModal';
-import NewIncomeModal, { Income as NewIncome } from './NewIncomeModal';
+import UpsertExpenseModal, { Expense as NewExpense } from './UpsertExpenseModal';
+import UpsertIncomeModal, { Income as NewIncome } from './UpsertIncomeModal';
 
 
 
@@ -29,6 +30,12 @@ export default function HomeView({ home }: HomeViewProps) {
     const [newExpenseModalVisible, setNewExpenseModalVisible] = useState(false);
     const [newIncomeModalVisible, setNewIncomeModalVisible] = useState(false);
 
+      useFocusEffect(
+        useCallback(() => {
+          fetchExpenses();
+          fetchIncomes();
+        }, [])
+      );
     
       const handleCreateExpense = (newExpense: NewExpense) => {
         console.log("calling handleCreateExpense");
@@ -77,8 +84,8 @@ export default function HomeView({ home }: HomeViewProps) {
             
             
             <MainSpeedDial handleAddIncome={() => setNewIncomeModalVisible(true)} handleAddExpense={() => {setNewExpenseModalVisible(true)}} />
-            <NewExpenseModal visible={newExpenseModalVisible} setVisible={setNewExpenseModalVisible} handleCreate={handleCreateExpense} />
-            <NewIncomeModal visible={newIncomeModalVisible} setVisible={setNewIncomeModalVisible} handleCreate={handleCreateIncome} />
+            <UpsertExpenseModal title='Nuevo gasto' visible={newExpenseModalVisible} setVisible={setNewExpenseModalVisible} handleSubmit={handleCreateExpense} />
+            <UpsertIncomeModal visible={newIncomeModalVisible} setVisible={setNewIncomeModalVisible} handleCreate={handleCreateIncome} />
             
         </SafeAreaView>
     );

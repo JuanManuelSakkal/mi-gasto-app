@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { AuthProvider, useAuth } from '@/app/context/AuthContext';
 import AuthStack from '@/app/navigation/AuthStack';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { useNavigation } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 

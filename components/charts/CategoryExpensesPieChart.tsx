@@ -1,5 +1,5 @@
-import { useHome } from "@/app/context/HomeContext";
-import { generateRandomHexColor } from "@/app/utils/RandomColorGenerator";
+import { useHome } from "@/context/HomeContext";
+import { generateRandomHexColor } from "@/utils/RandomColorGenerator";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PieChartPro, pieDataItem } from "react-native-gifted-charts";

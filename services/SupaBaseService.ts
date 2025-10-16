@@ -1,6 +1,6 @@
 
-import { Expense } from "../components/NewExpenseModal";
-import { Income } from "../components/NewIncomeModal";
+import { Expense } from "../components/UpsertExpenseModal";
+import { Income } from "../components/UpsertIncomeModal";
 import { supabase } from "../supabase/supabase-client";
 
 export const createUser = async (email: string, password: string, name: string) => {
@@ -98,10 +98,15 @@ export const getUsersByHome = async (homeId: string) => {
 
 export const getExpensesByHome = async (homeId: string) => {
   const { data, error } = await supabase.from('expenses').select("id, name, profiles(name), description, category(name), payment_method(name), amount, created_at").eq('home_id', homeId).order('created_at', { ascending: false });
-  console.log("expenses error", error);
   if(error) return [];
   return data;
 };
+
+export const getExpenseById = async (id: string) => {
+  const { data, error } = await supabase.from('expenses').select("id, name, profiles(name), description, category_id, category(name), method_id, payment_method(name), amount, created_at").eq('id', id).single();
+  if(error) return null;
+  return data;
+}
 
 export const getCategories = async () => {
   const { data, error } = await supabase.from('category').select("id, name");
@@ -145,11 +150,17 @@ export const updateUserPassword = async (password: string) => {
 }
 
 export const getIncomesByHome = async (homeId: string) => {
-  const { data, error } = await supabase.from('incomes').select("id, name, profiles(name), description, amount, payment_method(name), created_at").eq('home_id', homeId).order('created_at', { ascending: false });
+  const { data, error } = await supabase.from('incomes').select("id, name, profiles(name), description, amount, earning_method(name), created_at").eq('home_id', homeId).order('created_at', { ascending: false });
   console.log("incomes error", error);
   if(error) return [];
   return data;
 };
+
+export const getIncomeById = async (id: string) => {
+  const { data, error } = await supabase.from('incomes').select("id, name, profiles(name), description, amount, method_id, earning_method(name), created_at").eq('id', id).single();
+  if(error) return null;
+  return data;
+}
 
 export const createIncome = async (userId: string, homeId: string, income: Income) => {
     const { error } = await supabase.from('incomes').insert({ user_id: userId, home_id: homeId, name: 
@@ -163,3 +174,23 @@ export const getEarningMethods = async () => {
   if(error) return [];
   return data;
 };
+
+export const deleteExpense = async (id: string) => {
+    const { error } = await supabase.from('expenses').delete().eq('id', id)
+    return error
+};
+
+export const updateExpense = async (id: string, expense: Expense) => {
+  const { error } = await supabase.from('expenses').update({ name: expense.name, category_id: expense.category.id, method_id: expense.method.id, description: expense.description, amount: expense.amount }).eq('id', id);
+  return error
+}
+
+export const deleteIncome = async (id: string) => {
+    const { error } = await supabase.from('incomes').delete().eq('id', id)
+    return error
+};
+
+export const updateIncome = async (id: string, income: Income) => { 
+  const { error } = await supabase.from('incomes').update({ name: income.name, method_id: income.method.id, description: income.description, amount: income.amount }).eq('id', id);
+  return error
+}

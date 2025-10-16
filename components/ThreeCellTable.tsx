@@ -1,10 +1,9 @@
 import { Pressable } from "@react-native-material/core";
 import { Avatar } from "@rneui/themed";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { Expense, Income } from "../context/HomeContext";
 
 export interface RowData {
-    object: Expense | Income;
+    id: string;
     userName: string;
     name: string;
     color: string;
@@ -14,7 +13,7 @@ export interface RowData {
 
 interface ThreeCellTableProps {
     data: RowData[];
-    onRowPress?: (object: Expense | Income) => void
+    onRowPress?: (id: string) => void
 }
 
 export default function ThreeCellTable({data, onRowPress}: ThreeCellTableProps) {
@@ -25,7 +24,7 @@ export default function ThreeCellTable({data, onRowPress}: ThreeCellTableProps) 
                 data={data} 
                 renderItem={({item, index}) => (
                     <Pressable pressEffect="highlight" style={styles.tableRow}
-                        onPress={() => onRowPress && onRowPress(item.object)}
+                        onPress={() => onRowPress && onRowPress(item.id)}
                     >
                         <View style={[styles.tableCell, {flex: 1}]}>
                             <Avatar rounded title={item.userName[0]}  containerStyle={{borderRadius: 50, backgroundColor: item.color}} />

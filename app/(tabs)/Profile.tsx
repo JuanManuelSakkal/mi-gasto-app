@@ -1,16 +1,16 @@
-import CustomButton from "@/app/components/CustomButton";
+import CustomButton from "@/components/CustomButton";
 import { Pressable } from "@react-native-material/core";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ChangePasswordDialog from "../components/ChangePasswordDialog";
-import ProfileFormDialog from "../components/ProfileFormDialog";
-import { useAuth } from "../context/AuthContext";
-import { useLoading } from "../context/LoadingContext";
-import { useSuccessAnimation } from "../context/SuccessAnimationContext";
-import { useUser } from "../context/UserContext";
-import { updateUserEmail, updateUserName, updateUserPassword } from "../services/SupaBaseService";
-import { supabase } from '../supabase/supabase-client';
+import ChangePasswordDialog from "../../components/ChangePasswordDialog";
+import ProfileFormDialog from "../../components/ProfileFormDialog";
+import { useAuth } from "../../context/AuthContext";
+import { useLoading } from "../../context/LoadingContext";
+import { useSuccessAnimation } from "../../context/SuccessAnimationContext";
+import { useUser } from "../../context/UserContext";
+import { updateUserEmail, updateUserName, updateUserPassword } from "../../services/SupaBaseService";
+import { supabase } from '../../supabase/supabase-client';
 
 export default function ProfileScreen() {
     const { userName, setUserName } = useUser();

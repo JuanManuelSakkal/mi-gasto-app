@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import CategoryExpensesPieChart from "../components/charts/CategoryExpensesPieChart";
-import UserExpensesBarChart from "../components/charts/UserExpensesBarChart";
-import { useUser } from "../context/UserContext";
+import CategoryExpensesPieChart from "../../components/charts/CategoryExpensesPieChart";
+import UserExpensesBarChart from "../../components/charts/UserExpensesBarChart";
+import { useUser } from "../../context/UserContext";
 
 
 export default function Expenses() {

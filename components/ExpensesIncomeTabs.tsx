@@ -1,5 +1,5 @@
 import { Divider, Tab, TabView } from "@rneui/themed";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Expense, Income, UserColors } from "../context/HomeContext";
@@ -12,11 +12,27 @@ interface ExpensesIncomeTabsProps {
 }
 
 export default function ExpensesIncomeTabs({expenses, incomes, userColors}: ExpensesIncomeTabsProps) {
-    const navigation = useNavigation();
+    const router = useRouter()
     const [index, setIndex] = useState(0);
 
-    function handleExpensePress(expense: Expense | Income) {
-        navigation.navigate("details/ExpenseDetails", { expense });
+    function handleExpensePress(id: string) {
+        const route = "/expenses/[expenseId]"
+        router.push({
+            pathname: route,
+            params: {
+                expenseId: id
+            }
+        });
+    }
+
+    function handleIncomePress(id: string) {
+        const route = "/incomes/[incomeId]"
+        router.push({
+            pathname: route,
+            params: {
+                incomeId: id
+            }
+        });
     }
 
     return (
@@ -40,7 +56,7 @@ export default function ExpensesIncomeTabs({expenses, incomes, userColors}: Expe
                     <TabView.Item style={[styles.itemStyle]}>
                         <ThreeCellTable onRowPress={handleExpensePress} data={expenses.map(expense => {
                                                                         return {
-                                                                            object: expense,
+                                                                            id: expense.id,
                                                                             userName: expense.payer, 
                                                                             color: userColors[expense.payer],
                                                                             name: expense.name, 
@@ -51,7 +67,7 @@ export default function ExpensesIncomeTabs({expenses, incomes, userColors}: Expe
                                                             )}/>
                     </TabView.Item>
                     <TabView.Item style={[styles.itemStyle]}>
-                        <ThreeCellTable data={incomes.map(income => {
+                        <ThreeCellTable onRowPress={handleIncomePress} data={incomes.map(income => {
                                                                         return {
                                                                             id: income.id,
                                                                             userName: income.depositor, 

@@ -7,7 +7,7 @@ import { useUser } from "./UserContext";
 
 
 interface HomeContextType {
-    fetchExpenses: () => void;
+    fetchExpenses: () => Promise<void>;
     fetchIncomes: () => void;
     expenses: Expense[];
     incomes: Income[];
@@ -56,7 +56,7 @@ export interface UserColors {
 }
 
 const HomeContext = createContext<HomeContextType>({
-    fetchExpenses: () => { },
+    fetchExpenses: () => Promise.resolve(),
     fetchIncomes: () => { },
     expenses: [],
     incomes: [],
@@ -124,9 +124,9 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
             setMemberIncomes(memberIncomes);
     }, [incomes, members]);
 
-    function fetchExpenses() {
+    async function fetchExpenses() {
         setLoading(true);
-        getExpensesByHome(selectedHome.id).then(data => {
+        return getExpensesByHome(selectedHome.id).then(data => {
             if(!data) return
             setExpenses(data.map((expense) => {
                 return {
@@ -154,7 +154,7 @@ export const HomeProvider = ({ children }: { children: ReactNode }) => {
                     name: income.name,
                     depositor: income.profiles.name,
                     description: income.description,
-                    method: income.payment_method.name,
+                    method: income.earning_method.name,
                     amount: income.amount,
                     created_at: Moment(income.created_at).format('DD/MM/YYYY HH:mm')
                 }

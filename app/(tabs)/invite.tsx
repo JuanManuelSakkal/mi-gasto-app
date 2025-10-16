@@ -1,17 +1,17 @@
-import CustomButton from '@/app/components/CustomButton';
-import CustomInput from '@/app/components/CustomInput';
+import CustomButton from '@/components/CustomButton';
+import CustomInput from '@/components/CustomInput';
 
-import { useAuth } from '@/app/context/AuthContext';
-import { useLoading } from '@/app/context/LoadingContext';
-import { Home, useUser } from '@/app/context/UserContext';
-import { sendEmail } from '@/app/utils/EmailSender';
-import { inviteEmailTemplate } from '@/app/utils/htmlTemplates';
+import { useAuth } from '@/context/AuthContext';
+import { useLoading } from '@/context/LoadingContext';
+import { Home, useUser } from '@/context/UserContext';
+import { sendEmail } from '@/utils/EmailSender';
+import { inviteEmailTemplate } from '@/utils/htmlTemplates';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import SelectHomeDialog from '../components/SelectHomeDialog';
-import { useSuccessAnimation } from '../context/SuccessAnimationContext';
-import { createInvite } from '../services/SupaBaseService';
-import { generateRandomCode } from '../utils/RandomCodeGenerator';
+import SelectHomeDialog from '../../components/SelectHomeDialog';
+import { useSuccessAnimation } from '../../context/SuccessAnimationContext';
+import { createInvite } from '../../services/SupaBaseService';
+import { generateRandomCode } from '../../utils/RandomCodeGenerator';
 export default function InviteScreen() {
   const { user, userName } = useAuth();
   const { setLoading } = useLoading();

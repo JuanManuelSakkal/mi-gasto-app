@@ -3,11 +3,12 @@ interface CustomInputProps {
     placeholder?: string
     onChangeText?: (text: string) => void,
     extraStyles?: TextStyle
+    value?: string
 }
 
-export default function CustomInput( { placeholder, onChangeText, extraStyles }: CustomInputProps ) {
+export default function CustomInput( { placeholder, onChangeText, extraStyles, value }: CustomInputProps ) {
     return (
-        <TextInput placeholder={placeholder} onChangeText={onChangeText} style={[styles.input, extraStyles]} />       
+        <TextInput value={value} placeholder={placeholder} onChangeText={onChangeText} style={[styles.input, extraStyles]} />       
     )
 }
 

@@ -1,13 +1,13 @@
-import CustomButton from '@/app/components/CustomButton';
-import HomeView from '@/app/components/HomeView';
-import NewHomeModal from '@/app/components/NewHomeModal';
-import { useAuth } from '@/app/context/AuthContext';
-import { useLoading } from '@/app/context/LoadingContext';
-import { useUser } from '@/app/context/UserContext';
+import CustomButton from '@/components/CustomButton';
+import HomeView from '@/components/HomeView';
+import NewHomeModal from '@/components/NewHomeModal';
+import { useAuth } from '@/context/AuthContext';
+import { useLoading } from '@/context/LoadingContext';
+import { useUser } from '@/context/UserContext';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Expense } from '../components/NewExpenseModal';
-import { createUserHome } from '../services/SupaBaseService';
+import { Expense } from '../../components/UpsertExpenseModal';
+import { createUserHome } from '../../services/SupaBaseService';
 
 export default function HomeScreen() {
   const { user } = useAuth();

@@ -1,10 +1,10 @@
-import CustomButton from "@/app/components/CustomButton";
 import { AuthStackParamList } from "@/app/navigation/AuthStack";
+import CustomButton from "@/components/CustomButton";
 import { Snackbar } from "@react-native-material/core";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { authUser } from "../services/SupaBaseService";
+import { authUser } from "../../services/SupaBaseService";
 
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
