@@ -1,3 +1,4 @@
+import MonthExpensesLineChart from "@/components/charts/MonthExpensesLineChart";
 import { StyleSheet, Text, View } from "react-native";
 import CategoryExpensesPieChart from "../../components/charts/CategoryExpensesPieChart";
 import UserExpensesBarChart from "../../components/charts/UserExpensesBarChart";
@@ -22,6 +23,7 @@ export default function Expenses() {
             }
             { selectedHome?.id &&
                 <View style={styles.container}>
+                    <MonthExpensesLineChart />
                     <UserExpensesBarChart />
                     <CategoryExpensesPieChart />
                 </View>
